@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.javihuh.companion",
+  "name": "Niku Companion",
+  "version": "1.0.0",
+  "author": "javihuh",
+  "description": "A floating kaomoji companion with personalized Spanish messages, cyberpunk transmissions and hydration reminders.",
+  "kinds": ["service"],
+  "keepLoaded": true,
+  "entryPoints": { "service": "Service.qml" }
+}
