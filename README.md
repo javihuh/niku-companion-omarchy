@@ -6,8 +6,6 @@ Personalized Spanish messages about creativity, repairing machines, distant
 signals and life inside a megastructure. A gentle floating animation and
 the soft green Lifeless palette, with no network requests or AI service.
 
-![Niku Companion with a personalized message](docs/preview.png)
-
 *Actual widget rendering with the fictional name Alex on a plain background.*
 
 ## Install
