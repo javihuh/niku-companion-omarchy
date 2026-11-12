@@ -39,6 +39,15 @@ function settings(defaults, overrides) {
   return result;
 }
 
+// One-time migration of the former bundled interval; preserve later choices.
+function migratePreferences(value) {
+  var next = Object.assign({}, value);
+  if (Number(next.timingVersion) >= 1) return next;
+  if (Number(next.changeMinutes) === 10) next.changeMinutes = 5;
+  next.timingVersion = 1;
+  return next;
+}
+
 function messages(config, key) {
   var values = key === "hydration" ? config.hydrationMessages
     : (config.periods && config.periods[key] ? config.periods[key].messages : []);

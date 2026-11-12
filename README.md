@@ -34,9 +34,9 @@ omarchy plugin update io.github.javihuh.companion --yes
 
 Version 1.1.0 adds live theme colors, 20 daytime and 20 nighttime phrases,
 13 new hydration reminders, and a default five-minute phrase interval.
-Your name and preferences are preserved. If your existing
-`~/.config/niku-companion/config.json` explicitly sets `changeMinutes` to 10,
-change it to 5 to use the new rhythm. Custom phrase overrides still take
+Version 1.1.1 automatically migrates the former 10-minute interval to 5 once,
+preserving your name and other preferences. Other custom intervals are kept,
+and you can choose 10 again after migration. Custom phrase overrides still take
 precedence; the time-of-day keys are now `day` and `night`.
 
 ## Messages and rotation

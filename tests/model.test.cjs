@@ -10,6 +10,17 @@ const defaults = JSON.parse(fs.readFileSync(path.join(root, 'personality.json'),
 const plain = value => JSON.parse(JSON.stringify(value));
 const minute = 60000;
 
+test('old timing migrates once without changing other preferences or later choices', () => {
+  const original = { name: 'Javi', changeMinutes: 10, hydrationEveryMinutes: 30, workspace: 2 };
+  const migrated = plain(model.migratePreferences(original));
+  assert.deepEqual(migrated, { ...original, changeMinutes: 5, timingVersion: 1 });
+  assert.equal(original.changeMinutes, 10);
+  assert.deepEqual(plain(model.migratePreferences(migrated)), migrated);
+  assert.equal(model.migratePreferences({ ...migrated, changeMinutes: 10 }).changeMinutes, 10);
+  assert.equal(model.migratePreferences({ changeMinutes: 7 }).changeMinutes, 7);
+  assert.equal(model.migratePreferences({}).changeMinutes, undefined);
+});
+
 test('all 53 messages personalize safely, with a natural no-name fallback', () => {
   const values = [...defaults.hydrationMessages, ...Object.values(defaults.periods).flatMap(x => x.messages)];
   assert.equal(values.length, 53);

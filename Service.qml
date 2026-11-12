@@ -97,14 +97,18 @@ Item {
     onFileChanged: reload()
     onLoaded: {
       try {
-        root.preferences = root.readObject(text());
+        var loaded = root.readObject(text());
+        var migrated = Model.migratePreferences(loaded);
+        root.preferences = migrated;
+        if (JSON.stringify(loaded) !== JSON.stringify(migrated))
+          preferencesFile.setText(JSON.stringify(migrated, null, 2) + "\n");
         root.preferencesReady = true;
       } catch (error) { root.fail("Invalid config.json; fix the JSON and reload the plugin: " + error); }
     }
     onLoadFailed: function(error) {
       if (!root.directoriesReady) return;
       if (error === FileViewError.FileNotFound) {
-        root.preferences = ({});
+        root.preferences = Model.migratePreferences({});
         root.preferencesReady = true;
       } else root.fail("Could not read config.json: " + error);
     }
