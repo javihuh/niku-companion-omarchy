@@ -31,8 +31,8 @@ PanelWindow {
   Rectangle {
     anchors.fill: parent
     radius: 20
-    color: "#243031"
-    border.color: "#5ac2aa"
+    color: Commons.Color.background
+    border.color: Commons.Color.accent
     border.width: 1
 
     Column {
@@ -44,7 +44,7 @@ PanelWindow {
       Text {
         width: parent.width
         text: "ᨳ𐔌՞҂ ˕ ֊՞𐦯ᜊ"
-        color: "#5ac2aa"
+        color: Commons.Color.accent
         font.family: Commons.Style.font.family
         font.pixelSize: 32
         horizontalAlignment: Text.AlignHCenter
@@ -53,7 +53,7 @@ PanelWindow {
         width: parent.width
         text: "Niku Companion\n¿Cómo quieres que te llame?"
         textFormat: Text.PlainText
-        color: "#dcd6ce"
+        color: Commons.Color.foreground
         font.family: Commons.Style.font.family
         font.pixelSize: 20
         horizontalAlignment: Text.AlignHCenter
@@ -63,6 +63,11 @@ PanelWindow {
         id: nameField
         width: parent.width
         placeholderText: "Tu nombre"
+        palette.base: Commons.Color.background
+        palette.text: Commons.Color.foreground
+        palette.placeholderText: Commons.Color.muted
+        palette.highlight: Commons.Color.accent
+        palette.highlightedText: Commons.Color.background
         maximumLength: 60
         enabled: !root.saving
         onAccepted: if (!root.saving) root.accepted(text)
@@ -70,7 +75,7 @@ PanelWindow {
       Text {
         width: parent.width
         text: "Tu nombre se guarda solo en este equipo. Puedes cambiarlo después."
-        color: "#dcd6ce"
+        color: Commons.Color.foreground
         font.family: Commons.Style.font.family
         font.pixelSize: 13
         wrapMode: Text.WordWrap
@@ -79,12 +84,18 @@ PanelWindow {
       Button {
         width: parent.width
         text: root.saving ? "Guardando…" : "Guardar"
+        palette.button: Commons.Color.background
+        palette.buttonText: Commons.Color.foreground
+        palette.highlight: Commons.Color.accent
         enabled: !root.saving
         onClicked: root.accepted(nameField.text)
       }
       Button {
         width: parent.width
         text: "Continuar sin nombre"
+        palette.button: Commons.Color.background
+        palette.buttonText: Commons.Color.foreground
+        palette.highlight: Commons.Color.accent
         enabled: !root.saving
         onClicked: root.accepted("")
       }
@@ -92,7 +103,8 @@ PanelWindow {
         width: parent.width
         visible: text.length > 0
         text: root.errorText
-        color: "#ffb4ab"
+        textFormat: Text.PlainText
+        color: Commons.Color.urgent
         font.pixelSize: 13
         wrapMode: Text.WordWrap
       }

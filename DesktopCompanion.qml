@@ -9,9 +9,9 @@ PanelWindow {
   property var config: ({})
   property string message: ""
   property bool enabledSetting: false
-  readonly property color accent: "#5ac2aa"
-  readonly property color foreground: "#dcd6ce"
-  readonly property color surface: "#243031"
+  readonly property color accent: Commons.Color.accent
+  readonly property color foreground: Commons.Color.foreground
+  readonly property color surface: Commons.Color.background
   readonly property var targetScreen: {
     if (config.monitor) {
       for (var i = 0; i < Quickshell.screens.length; i++)

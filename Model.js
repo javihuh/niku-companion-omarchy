@@ -25,16 +25,14 @@ function formatMessage(template, name) {
 }
 
 function periodAt(hour) {
-  if (hour >= 5 && hour < 12) return "morning";
-  if (hour >= 12 && hour < 19) return "afternoon";
-  if (hour >= 19 && hour < 23) return "evening";
+  if (hour >= 5 && hour < 19) return "day";
   return "night";
 }
 
 function settings(defaults, overrides) {
   var result = Object.assign({}, defaults, overrides);
   result.periods = Object.assign({}, defaults.periods || {}, overrides.periods || {});
-  result.changeMinutes = positive(result.changeMinutes, 10);
+  result.changeMinutes = positive(result.changeMinutes, 5);
   result.hydrationEveryMinutes = Math.max(result.changeMinutes,
     positive(result.hydrationEveryMinutes, 30));
   result.workspace = Math.max(1, Math.floor(positive(result.workspace, 1)));
@@ -84,7 +82,7 @@ function draw(state, key, values, random) {
 function advance(previous, deltaMs, period, config, random) {
   random = random || Math.random;
   var state = restore(JSON.parse(JSON.stringify(previous)));
-  var changeMs = positive(config.changeMinutes, 10) * 60000;
+  var changeMs = positive(config.changeMinutes, 5) * 60000;
   var hydrationMs = Math.max(changeMs, positive(config.hydrationEveryMinutes, 30) * 60000);
   var elapsed = Math.max(0, Number(deltaMs) || 0);
   state.elapsedMs += elapsed;

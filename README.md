@@ -2,9 +2,9 @@
 
 **ᨳ𐔌՞҂ ˕ ֊՞𐦯ᜊ** A quiet kaomoji friend for your Omarchy desktop.
 
-Personalized Spanish messages about creativity, repairing machines, distant
+Personalized Spanish messages about mutual aid, repairing machines, distant
 signals and life inside a megastructure. A gentle floating animation and
-the soft green Lifeless palette, with no network requests or AI service.
+colors from your Omarchy theme, with no network requests or AI service.
 
 *Actual widget rendering with the fictional name Alex on a plain background.*
 
@@ -23,16 +23,32 @@ name or choose **“Continuar sin nombre”**. The widget lives in the bottom-ri
 corner of workspace 1 on the first monitor returned by Quickshell by default.
 It is click-through and sits behind application windows.
 
+The companion and its setup window follow the current Omarchy theme live,
+using its accent, foreground and background colors.
+
+## Update
+
+```bash
+omarchy plugin update io.github.javihuh.companion --yes
+```
+
+Version 1.1.0 adds live theme colors, 20 daytime and 20 nighttime phrases,
+13 new hydration reminders, and a default five-minute phrase interval.
+Your name and preferences are preserved. If your existing
+`~/.config/niku-companion/config.json` explicitly sets `changeMinutes` to 10,
+change it to 5 to use the new rhythm. Custom phrase overrides still take
+precedence; the time-of-day keys are now `day` and `night`.
+
 ## Messages and rotation
 
-- **101 Spanish phrases**: 22 per time-of-day group and 13 hydration messages.
-- Changes every **10 minutes of active-workspace time**.
+- **53 Spanish phrases**: 20 per time-of-day group and 13 hydration messages,
+  mixing megastructure exploration, punk mutual aid and gentle nighttime company.
+- Changes every **5 minutes of active-workspace time**.
 - Hydration reminder every **30 minutes of active-workspace time**, displayed
   for the usual message interval. It replaces one normal message slot.
 - Each group draws without repeats until exhausted. A new cycle avoids
   immediately repeating the last phrase (unless the group has only one).
-- Groups: morning 05:00–12:00, afternoon 12:00–19:00, evening 19:00–23:00,
-  night 23:00–05:00, using the local clock.
+- Groups: day 05:00–19:00 and night 19:00–05:00, using the local clock.
 - Switching workspaces or disabling the plugin pauses the timers. Reopening
   a time-of-day group resumes its last phrase. Suspend time is not counted.
 - Rotation is saved on message changes, when hiding, and every 30 seconds.
@@ -40,8 +56,9 @@ It is click-through and sits behind application windows.
 
 “Visible” means the target workspace is active on the selected monitor. Niku
 does not inspect other applications: covering it with a window does not pause
-the timer. All 101 messages are discovered over multiple days, not necessarily
-within a single day.
+the timer. Each normal group takes about two active hours to explore; all 13
+hydration messages take 6.5 active hours. Progress carries across days, so
+seeing every phrase within a single day is optional.
 
 ## Personalize
 
@@ -64,7 +81,7 @@ other settings you want to keep. Changes reload automatically:
   "monitor": "",
   "marginRight": 48,
   "marginBottom": 42,
-  "changeMinutes": 10,
+  "changeMinutes": 5,
   "hydrationEveryMinutes": 30
 }
 ```

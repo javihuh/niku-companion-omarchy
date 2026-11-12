@@ -10,9 +10,9 @@ const defaults = JSON.parse(fs.readFileSync(path.join(root, 'personality.json'),
 const plain = value => JSON.parse(JSON.stringify(value));
 const minute = 60000;
 
-test('all 101 messages personalize safely, with a natural no-name fallback', () => {
+test('all 53 messages personalize safely, with a natural no-name fallback', () => {
   const values = [...defaults.hydrationMessages, ...Object.values(defaults.periods).flatMap(x => x.messages)];
-  assert.equal(values.length, 101);
+  assert.equal(values.length, 53);
   for (const value of values) {
     assert.ok(value.includes('{name}'), value);
     assert.ok(model.formatMessage(value, 'Javi').includes('Javi'));
@@ -40,29 +40,29 @@ test('each group exhausts its messages before repeating, including across persis
   }
 });
 
-test('water at 30 visible minutes, normal phrases at 10; hydration does not consume normal pool', () => {
-  let state = model.advance(model.restore(null), 0, 'morning', defaults, () => 0);
+test('water at 30 visible minutes, normal phrases at 5; hydration does not consume normal pool', () => {
+  let state = model.advance(model.restore(null), 0, 'day', defaults, () => 0);
   const first = state.current;
-  state = model.advance(state, 9 * minute, 'morning', defaults, () => 0);
+  state = model.advance(state, 4 * minute, 'day', defaults, () => 0);
   assert.equal(state.current, first);
-  state = model.advance(state, minute, 'morning', defaults, () => 0);
+  state = model.advance(state, minute, 'day', defaults, () => 0);
   assert.notEqual(state.current, first);
-  state = model.advance(state, 10 * minute, 'morning', defaults, () => 0);
-  const normalSeen = plain(state.groups.morning.seen);
-  state = model.advance(state, 10 * minute, 'morning', defaults, () => 0);
+  for (let i = 0; i < 4; i++) state = model.advance(state, 5 * minute, 'day', defaults, () => 0);
+  const normalSeen = plain(state.groups.day.seen);
+  state = model.advance(state, 5 * minute, 'day', defaults, () => 0);
   assert.equal(state.activeGroup, 'hydration');
-  assert.deepEqual(plain(state.groups.morning.seen), normalSeen);
-  state = model.advance(state, 10 * minute, 'morning', defaults, () => 0);
-  assert.equal(state.activeGroup, 'morning');
-  assert.equal(state.groups.morning.seen.length, normalSeen.length + 1);
-  state = model.advance(state, 20 * minute, 'morning', defaults, () => 0);
+  assert.deepEqual(plain(state.groups.day.seen), normalSeen);
+  state = model.advance(state, 5 * minute, 'day', defaults, () => 0);
+  assert.equal(state.activeGroup, 'day');
+  assert.equal(state.groups.day.seen.length, normalSeen.length + 1);
+  for (let i = 0; i < 5; i++) state = model.advance(state, 5 * minute, 'day', defaults, () => 0);
   assert.equal(state.activeGroup, 'hydration');
   assert.equal(state.groups.hydration.seen.length, 2);
 });
 
 test('reload and zero hidden-time delta preserve current phrase and timers', () => {
   let state = model.advance(model.restore(null), 0, 'night', defaults, () => 0);
-  state = model.advance(state, 7 * minute, 'night', defaults, () => 0);
+  state = model.advance(state, 2 * minute, 'night', defaults, () => 0);
   const saved = JSON.stringify(state);
   state = model.advance(model.restore(JSON.parse(saved)), 0, 'night', defaults, () => 0);
   assert.equal(JSON.stringify(state), saved);
@@ -71,13 +71,13 @@ test('reload and zero hidden-time delta preserve current phrase and timers', () 
 });
 
 test('period changes resume the last phrase in that group without consuming another', () => {
-  let state = model.advance(model.restore(null), 0, 'morning', defaults, () => 0);
-  const morning = state.current;
-  state = model.advance(state, 0, 'afternoon', defaults, () => 0);
-  assert.notEqual(state.current, morning);
-  state = model.advance(state, 0, 'morning', defaults, () => 0);
-  assert.equal(state.current, morning);
-  assert.equal(state.groups.morning.seen.length, 1);
+  let state = model.advance(model.restore(null), 0, 'day', defaults, () => 0);
+  const day = state.current;
+  state = model.advance(state, 0, 'night', defaults, () => 0);
+  assert.notEqual(state.current, day);
+  state = model.advance(state, 0, 'day', defaults, () => 0);
+  assert.equal(state.current, day);
+  assert.equal(state.groups.day.seen.length, 1);
 });
 
 test('updated phrase lists keep progress, drop removed entries and include new ones', () => {
@@ -92,11 +92,13 @@ test('overrides preserve defaults, zero margins, Unicode names and safe timing b
   const config = model.settings(defaults, { marginRight: 0, creature: 'ฅ(•ㅅ•)ฅ', periods: { night: { messages: ['Hi, {name}'] } }, hydrationEveryMinutes: -1 });
   assert.equal(config.marginRight, 0);
   assert.equal(config.hydrationEveryMinutes, 30);
-  assert.equal(config.periods.morning.messages.length, 22);
+  assert.equal(config.periods.day.messages.length, 20);
   assert.equal(config.periods.night.messages.length, 1);
   assert.equal(model.cleanName('  Javí\n '), 'Javí');
-  assert.equal(model.periodAt(5), 'morning');
-  assert.equal(model.periodAt(12), 'afternoon');
-  assert.equal(model.periodAt(19), 'evening');
+  assert.equal(model.periodAt(4), 'night');
+  assert.equal(model.periodAt(5), 'day');
+  assert.equal(model.periodAt(12), 'day');
+  assert.equal(model.periodAt(18), 'day');
+  assert.equal(model.periodAt(19), 'night');
   assert.equal(model.periodAt(23), 'night');
 });
